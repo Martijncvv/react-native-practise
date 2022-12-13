@@ -1,9 +1,6 @@
 import {
 	StyleSheet,
-	Text,
 	View,
-	TextInput,
-	Platform,
 	TouchableWithoutFeedback,
 	Modal,
 	Button,
@@ -20,16 +17,19 @@ import Screen from './Screen'
 export default function AppPicker({
 	icon,
 	items,
+	numberOfColumns = 1,
 	onSelectItem,
 	placeholder,
+	PickerItemComponent = PickerItem,
 	selectedItem,
+	width = '100%',
 }) {
 	const [modalVisible, setModalVisible] = useState(false)
 
 	return (
 		<>
 			<TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-				<View style={styles.container}>
+				<View style={[styles.container, { width }]}>
 					{icon && (
 						<MaterialCommunityIcons
 							name={icon}
@@ -38,9 +38,12 @@ export default function AppPicker({
 							style={styles.icon}
 						/>
 					)}
-					<AppText style={styles.text}>
-						{selectedItem ? selectedItem.label : placeholder}
-					</AppText>
+					{selectedItem ? (
+						<AppText style={styles.text}>{selectedItem.label}</AppText>
+					) : (
+						<AppText style={styles.placeholder}>{placeholder}</AppText>
+					)}
+
 					<MaterialCommunityIcons
 						name="chevron-down"
 						size={20}
@@ -51,19 +54,21 @@ export default function AppPicker({
 			<Modal visible={modalVisible} animationType="slide">
 				<Screen>
 					<Button title="Close" onPress={() => setModalVisible(false)} />
+
 					<FlatList
 						data={items}
 						keyExtractor={(item) => item.value.toString()}
+						numColumns={numberOfColumns}
 						renderItem={({ item }) => (
-							<PickerItem
-								label={item.label}
+							<PickerItemComponent
+								item={item}
 								onPress={() => {
 									setModalVisible(false)
 									onSelectItem(item)
 								}}
 							/>
 						)}
-					></FlatList>
+					/>
 				</Screen>
 			</Modal>
 		</>
@@ -72,16 +77,20 @@ export default function AppPicker({
 
 const styles = StyleSheet.create({
 	container: {
-		width: '100%',
-		padding: 15,
 		marginVertical: 10,
+		padding: 15,
 		flexDirection: 'row',
 
 		borderRadius: 25,
 		backgroundColor: defaultStyles.colors.light,
 	},
+
 	icon: {
 		marginRight: 10,
+	},
+	placeholder: {
+		color: defaultStyles.colors.medium,
+		flex: 1,
 	},
 	text: {
 		flex: 1,
