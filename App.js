@@ -3,8 +3,11 @@ import {
 	useDimensions,
 	useDeviceOrientation,
 } from '@react-native-community/hooks'
-import { StyleSheet, View, TextInput, Text, Switch } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, View, TextInput, Text, Switch, Button } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import * as ImagePicker from 'expo-image-picker'
+import * as Permissions from 'expo-permissions'
+import * as MediaLibrary from 'expo-media-library'
 
 import WelcomeScreen from './app/screens/WelcomeScreen'
 import ViewImageScreen from './app/screens/ViewImageScreen'
@@ -33,9 +36,29 @@ export default function App() {
 	const [isNew, setIsNew] = useState(false)
 	const [category, setCategory] = useState(categories[0])
 
+	useEffect(() => {
+		requestPermission()
+	}, [])
+
+	const requestPermission = async () => {
+		const promise = await MediaLibrary.presentPermissionsPickerAsync()
+		const { granted } = await MediaLibrary.requestPermissionsAsync(true)
+		console.log('granted: ', granted)
+		if (!granted) {
+			alert('You need to enable permission to access the library')
+		}
+
+		// const selectImage = () => {
+		// 	await
+		// }
+	}
+
 	return (
+		<Screen>
+			{/* <Button title="Select Image" onPress={selectImage} /> */}
+		</Screen>
 		// <LoginScreen />
-		<ListingEditScreen />
+		// <ListingEditScreen />
 		// <MessagesScreen />
 		// <ListItem />
 		// <Screen>
