@@ -4,9 +4,9 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
 import colors from '../config/colors'
 import AppText from './AppText'
 
-export default function AppCard({ title, subTitle, image }) {
+export default function AppCard({ title, subTitle, image, onPress }) {
 	return (
-		<TouchableOpacity style={styles.card}>
+		<TouchableOpacity style={styles.card} onPress={onPress}>
 			<Image style={styles.image} source={image}></Image>
 			<View style={styles.detailsContainer}>
 				<AppText style={styles.title}>{title}</AppText>

@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, View, Image, Text } from 'react-native'
 import AppButton from '../components/AppButton.js'
 import colors from '../config/colors'
 
-function WelcomeScreen() {
+function WelcomeScreen({ navigation }) {
 	return (
 		<ImageBackground
 			style={styles.background}
@@ -14,14 +14,14 @@ function WelcomeScreen() {
 				<Text style={styles.tagLine}>Sell What You Don't Need</Text>
 			</View>
 			<AppButton
-				text="Login"
+				title="Login"
 				color="primary"
-				onPress={() => console.log('Tapped')}
+				onPress={() => navigation.navigate('LoginScreen')}
 			/>
 			<AppButton
-				text="Register"
+				title="Register"
 				color="secondary"
-				onPress={() => console.log('RegisterTapped')}
+				onPress={() => navigation.navigate('RegisterScreen')}
 			/>
 			{/* <View style={styles.loginButton}></View> */}
 			<View style={styles.registerButton}></View>
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		paddingHorizontal: 15,
 	},
 
 	logo: {
