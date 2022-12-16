@@ -8,7 +8,7 @@ import Icon from '../components/Icon'
 
 import colors from '../config/colors'
 
-export default function AccountScreen() {
+export default function AccountScreen({ navigation }) {
 	const menuItems = [
 		{
 			title: 'My Listings',
@@ -23,6 +23,7 @@ export default function AccountScreen() {
 				name: 'email',
 				backgroundColor: colors.secondary,
 			},
+			targetScreen: 'Messages',
 		},
 	]
 
@@ -49,6 +50,7 @@ export default function AccountScreen() {
 									backgroundColor={item.icon.backgroundColor}
 								/>
 							}
+							onPress={() => navigation.navigate(item.targetScreen)}
 						/>
 					)}
 				/>

@@ -8,11 +8,22 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import { StyleSheet, View, TextInput, Text, Switch, Button } from 'react-native'
+import {
+	StyleSheet,
+	View,
+	TextInput,
+	Text,
+	Switch,
+	Button,
+	TouchableOpacity,
+} from 'react-native'
 import React, { useState, useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as MediaLibrary from 'expo-media-library'
+
+import AuthNavigator from './app/navigation/AuthNavigator'
+import AppNavigator from './app/navigation/AppNavigator'
 
 import WelcomeScreen from './app/screens/WelcomeScreen'
 import ViewImageScreen from './app/screens/ViewImageScreen'
@@ -28,6 +39,8 @@ import AppButton from './app/components/AppButton'
 import AppPicker from './app/components/AppPicker'
 import Screen from './app/components/Screen'
 import AppTextInput from './app/components/AppTextInput'
+import Icon from './app/components/Icon'
+import navigationTheme from './app/navigation/navigationTheme'
 // import ListItem from './app/components/ListItem'
 
 const categories = [
@@ -99,9 +112,9 @@ const Tab = createBottomTabNavigator()
 const TabNavigator = () => (
 	<Tab.Navigator
 		tabBarOptions={{
-			activeBackgroundColor: 'tomato',
-			activeTintColor: 'white',
-			inActiveBackgroundColor: '#eee',
+			activeBackgroundColor: 'white',
+			activeTintColor: 'tomato',
+			inActiveBackgroundColor: '#white',
 			inActiveTintColor: 'black',
 		}}
 	>
@@ -118,8 +131,15 @@ const TabNavigator = () => (
 			name="ListingEditScreen"
 			component={ListingEditScreen}
 			options={{
-				tabBarIcon: ({ size, color }) => (
-					<MaterialCommunityIcons name="plus" size={size} color={color} />
+				tabBarButton: ({ size, color }) => (
+					<TouchableOpacity style={styles.midButton}>
+						<Icon
+							name="plus"
+							size={26}
+							backgroundColor={'white'}
+							iconColor={'tomato'}
+						/>
+					</TouchableOpacity>
 				),
 			}}
 		/>
@@ -145,9 +165,11 @@ export default function App() {
 	// }, [])
 
 	return (
-		<NavigationContainer>
+		<NavigationContainer theme={navigationTheme}>
 			{/* <StackNavigator /> */}
-			<TabNavigator />
+			{/* <TabNavigator /> */}
+			{/* <AuthNavigator /> */}
+			<AppNavigator />
 		</NavigationContainer>
 		/* <Button title="Select Image" onPress={selectImage} /> */
 		// <LoginScreen />
@@ -170,3 +192,16 @@ export default function App() {
 	)
 	//  <ListingsScreen />
 }
+
+const styles = StyleSheet.create({
+	midButton: {
+		width: 50,
+		height: 50,
+		marginBottom: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+
+		backgroundColor: 'tomato',
+		borderRadius: 25,
+	},
+})

@@ -1,17 +1,12 @@
 import { StyleSheet, FlatList } from 'react-native'
 import React from 'react'
 
-import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
-import ListingDetailsScreen from '../screens/ListingDetailsScreen'
-
 import Screen from '../components/Screen'
 import AppCard from '../components/AppCard'
 import colors from '../config/colors'
+import routes from '../navigation/routes'
 
-export default function ListingsScreen() {
-	// const navigation = useNavigation()
-
+export default function ListingsScreen({ navigation }) {
 	const listings = [
 		{
 			id: 1,
@@ -26,7 +21,8 @@ export default function ListingsScreen() {
 			image: require('../assets/couch.jpg'),
 		},
 	]
-	const ListingDetailsScreen = ({ navigation }) => (
+
+	return (
 		<Screen style={styles.screen}>
 			<FlatList
 				data={listings}
@@ -36,42 +32,11 @@ export default function ListingsScreen() {
 						title={item.title}
 						subTitle={'$' + item.price}
 						image={item.image}
-						onPress={() => navigation.navigate('TweetDetails', { id: item.id })}
+						onPress={() => navigation.navigate(routes.LISTING_DETAILS, item)}
 					/>
 				)}
 			/>
 		</Screen>
-	)
-
-	const Stack = createStackNavigator()
-	const StackNavigator = () => (
-		<Stack.Navigator
-			screenOptions={
-				{
-					// headerStyle: { backgroundColor: 'dodgerblue' },
-					// headerTintColor: 'white',
-					// headerShown: false,
-				}
-			}
-		>
-			<Stack.Screen
-				name="ListingDetailsScreen"
-				component={ListingDetailsScreen}
-			/>
-			{/* <Stack.Screen
-				name="TweetDetails"
-				component={TweetDetails}
-				options={({ route }) => ({
-					title: `Tweet #${route.params.id}`,
-				})}
-			/> */}
-		</Stack.Navigator>
-	)
-
-	return (
-		<NavigationContainer>
-			<Stack.Navigator />
-		</NavigationContainer>
 	)
 }
 
