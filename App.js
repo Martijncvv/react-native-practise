@@ -3,43 +3,22 @@ import {
 	useDimensions,
 	useDeviceOrientation,
 } from '@react-native-community/hooks'
-import { NavigationContainer, useNavigation } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { NavigationContainer } from '@react-navigation/native'
 
-import {
-	StyleSheet,
-	View,
-	TextInput,
-	Text,
-	Switch,
-	Button,
-	TouchableOpacity,
-} from 'react-native'
+// import { AsyncStorage } from '@react-navigation/async-storage'
+import NetInfo, { useNetInfo } from '@react-native-community/netinfo'
+
+import { StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as MediaLibrary from 'expo-media-library'
 
-import AuthNavigator from './app/navigation/AuthNavigator'
 import AppNavigator from './app/navigation/AppNavigator'
+import AuthNavigator from './app/navigation/AuthNavigator'
+import FeedNavigator from './app/navigation/FeedNavigator'
+import AccountNavigator from './app/navigation/AccountNavigator'
 
-import WelcomeScreen from './app/screens/WelcomeScreen'
-import ViewImageScreen from './app/screens/ViewImageScreen'
-import ListingsScreen from './app/screens/ListingsScreen'
-import ListingDetailsScreen from './app/screens/ListingDetailsScreen'
-import MessagesScreen from './app/screens/MessagesScreen'
-import AccountScreen from './app/screens/AccountScreen'
-import LoginScreen from './app/screens/LoginScreen'
-import RegisterScreen from './app/screens/RegisterScreen'
-import ListingEditScreen from './app/screens/ListingEditScreen'
-
-import AppButton from './app/components/AppButton'
-import AppPicker from './app/components/AppPicker'
-import Screen from './app/components/Screen'
-import AppTextInput from './app/components/AppTextInput'
-import Icon from './app/components/Icon'
 import navigationTheme from './app/navigation/navigationTheme'
 // import ListItem from './app/components/ListItem'
 
@@ -49,117 +28,20 @@ const categories = [
 	{ label: 'Cameras', value: 3 },
 ]
 
-const Tweets = ({ navigation }) => (
-	<Screen>
-		<Text>Tweets</Text>
-		<Button
-			title="View Tweet"
-			onPress={() => navigation.navigate('TweetDetails', { id: 5 })}
-		/>
-	</Screen>
-)
-const TweetDetails = ({ route, navigation }) => (
-	<Screen>
-		<Text>TweetDetails {route.params.id}</Text>
-		<Button
-			title="Back to Tweets"
-			onPress={() => navigation.navigate('Tweets')}
-		/>
-	</Screen>
-)
-
-const Link = () => {
-	const navigation = useNavigation()
-
-	return (
-		<Button title="Click" onPress={() => navigation.navigate('TweetDetails')} />
-	)
-}
-
-const Stack = createStackNavigator()
-// const FeedNavigator = () => (
-const StackNavigator = () => (
-	<Stack.Navigator
-		screenOptions={
-			{
-				// headerStyle: { backgroundColor: 'dodgerblue' },
-				// headerTintColor: 'white',
-				// headerShown: false,
-			}
-		}
-	>
-		<Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-		<Stack.Screen name="LoginScreen" component={LoginScreen} />
-		<Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-
-		{/* <Stack.Screen
-			name="TweetDetails"
-			component={TweetDetails}
-			options={({ route }) => ({
-				title: `Tweet #${route.params.id}`,
-			})}
-		/> */}
-	</Stack.Navigator>
-)
-
-const Account = () => (
-	<Screen>
-		<Text>Account</Text>
-	</Screen>
-)
-
-const Tab = createBottomTabNavigator()
-const TabNavigator = () => (
-	<Tab.Navigator
-		tabBarOptions={{
-			activeBackgroundColor: 'white',
-			activeTintColor: 'tomato',
-			inActiveBackgroundColor: '#white',
-			inActiveTintColor: 'black',
-		}}
-	>
-		<Tab.Screen
-			name="Feed"
-			component={ListingsScreen}
-			options={{
-				tabBarIcon: ({ size, color }) => (
-					<MaterialCommunityIcons name="home" size={size} color={color} />
-				),
-			}}
-		/>
-		<Tab.Screen
-			name="ListingEditScreen"
-			component={ListingEditScreen}
-			options={{
-				tabBarButton: ({ size, color }) => (
-					<TouchableOpacity style={styles.midButton}>
-						<Icon
-							name="plus"
-							size={26}
-							backgroundColor={'white'}
-							iconColor={'tomato'}
-						/>
-					</TouchableOpacity>
-				),
-			}}
-		/>
-		<Tab.Screen
-			name="Account"
-			component={AccountScreen}
-			options={{
-				tabBarIcon: ({ size, color }) => (
-					<MaterialCommunityIcons name="account" size={size} color={color} />
-				),
-			}}
-		/>
-	</Tab.Navigator>
-)
-
 export default function App() {
-	const [firstName, setFirstName] = useState('')
-	const [isNew, setIsNew] = useState(false)
-	const [category, setCategory] = useState(categories[0])
+	const netInfo = useNetInfo()
 
+	const demo = async () => {
+		try {
+			await AsyncStorage.setIem('person', JSON.stringify({ id: 1 }))
+			const value = await AsyncStorage.getItem('person')
+			const person = JSON.parse(value)
+			console.log(person)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	// console.log('netInfo: ', netInfo)
 	// useEffect(() => {
 	// 	requestPermission()
 	// }, [])
@@ -167,8 +49,11 @@ export default function App() {
 	return (
 		<NavigationContainer theme={navigationTheme}>
 			{/* <StackNavigator /> */}
-			{/* <TabNavigator /> */}
+
 			{/* <AuthNavigator /> */}
+			{/* <AppNavigator /> */}
+			{/* <AccountNavigator /> */}
+
 			<AppNavigator />
 		</NavigationContainer>
 		/* <Button title="Select Image" onPress={selectImage} /> */

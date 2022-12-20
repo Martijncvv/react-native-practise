@@ -1,11 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Button } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
+// import * as Progress from 'react-native-progress'
+// import { useFormikContext } from 'formik'
+import listingsApi from '../api/listings'
+import useLocation from '../hooks/useLocation'
 
 import Screen from '../components/Screen'
+
 import AppFormPicker from '../components/AppFormPicker'
 import { AppForm, AppFormField, SubmitButton } from '../components/forms'
 import CategoryPickerItem from '../components/CategoryPickerItem'
+import ImageInputList from '../components/ImageInputList'
 
 const validationSchema = Yup.object().shape({
 	title: Yup.string().required().min(1).label('Title'),
@@ -15,6 +21,13 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function ListingEditScreen() {
+	const [imageUris, setImageUris] = useState()
+	const location = useLocation()
+
+	useEffect(() => {
+		requestPermission()
+	}, [])
+
 	const categories = [
 		{
 			label: 'Furniture',
@@ -45,8 +58,32 @@ export default function ListingEditScreen() {
 		},
 	]
 
+	const handleSubmit = async (listing) => {
+		const result = listingsApi.addListing(
+			{ ...listing, location },
+			(progress) => console.log(progress)
+		)
+		if (!result.ok) {
+			return alert('Could not save the listing')
+		}
+		alert('Success')
+	}
+
+	const handleAdd = (uri) => {
+		setImageUris([...imageUris, uri])
+	}
+	const handleRemove = (uri) => {
+		setImageUris(imageUris.filter((imageUri) => imageUri !== uri))
+	}
+
 	return (
 		<Screen>
+			<ImageInputList
+				imageUris={imageUris}
+				onAddImage={handleAdd}
+				onRemoveImage={handleRemove}
+			/>
+
 			<AppForm
 				validationSchema={validationSchema}
 				initialValues={{
@@ -55,7 +92,7 @@ export default function ListingEditScreen() {
 					description: '',
 					category: null,
 				}}
-				onSubmit={(values) => console.log(values)}
+				onSubmit={handleSubmit}
 			>
 				<AppFormField
 					autoCapitalize="sentences"
