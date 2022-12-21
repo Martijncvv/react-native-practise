@@ -10,7 +10,6 @@ import {
 import React, { useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 import colors from '../config/colors'
 
@@ -21,6 +20,7 @@ export default function ImageInput({ imageUri, onChangeImage }) {
 
 	const requestPermission = async () => {
 		const { granted } = await ImagePicker.getMediaLibraryPermissionsAsync(false)
+		console.log('granted: ', granted)
 		if (!granted) {
 			alert('Permission to access Library was denied')
 		}

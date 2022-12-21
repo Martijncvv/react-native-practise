@@ -9,7 +9,12 @@ import useLocation from '../hooks/useLocation'
 import Screen from '../components/Screen'
 
 import AppFormPicker from '../components/AppFormPicker'
-import { AppForm, AppFormField, SubmitButton } from '../components/forms'
+import {
+	AppForm,
+	AppFormField,
+	SubmitButton,
+	AppFormImagePicker,
+} from '../components/forms'
 import CategoryPickerItem from '../components/CategoryPickerItem'
 import ImageInputList from '../components/ImageInputList'
 
@@ -18,15 +23,11 @@ const validationSchema = Yup.object().shape({
 	price: Yup.number().required().min(1).max(10000).label('Price'),
 	category: Yup.object().nullable().required().label('Category'),
 	description: Yup.string().label('Description'),
+	images: Yup.array().min(1, 'Please select at least one image.'),
 })
 
 export default function ListingEditScreen() {
-	const [imageUris, setImageUris] = useState()
 	const location = useLocation()
-
-	useEffect(() => {
-		requestPermission()
-	}, [])
 
 	const categories = [
 		{
@@ -69,21 +70,8 @@ export default function ListingEditScreen() {
 		alert('Success')
 	}
 
-	const handleAdd = (uri) => {
-		setImageUris([...imageUris, uri])
-	}
-	const handleRemove = (uri) => {
-		setImageUris(imageUris.filter((imageUri) => imageUri !== uri))
-	}
-
 	return (
 		<Screen>
-			<ImageInputList
-				imageUris={imageUris}
-				onAddImage={handleAdd}
-				onRemoveImage={handleRemove}
-			/>
-
 			<AppForm
 				validationSchema={validationSchema}
 				initialValues={{
@@ -91,9 +79,11 @@ export default function ListingEditScreen() {
 					price: '',
 					description: '',
 					category: null,
+					images: [],
 				}}
 				onSubmit={handleSubmit}
 			>
+				<AppFormImagePicker name="images" />
 				<AppFormField
 					autoCapitalize="sentences"
 					autoCorrect={false}
