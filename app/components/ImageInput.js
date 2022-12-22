@@ -19,8 +19,9 @@ export default function ImageInput({ imageUri, onChangeImage }) {
 	}, [])
 
 	const requestPermission = async () => {
-		const { granted } = await ImagePicker.getMediaLibraryPermissionsAsync(false)
+		const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 		console.log('granted: ', granted)
+
 		if (!granted) {
 			alert('Permission to access Library was denied')
 		}

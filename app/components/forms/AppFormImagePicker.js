@@ -13,7 +13,7 @@ export default function AppFormImagePicker({ name }) {
 		setFieldValue(name, [...imageUris, uri])
 	}
 	const handleRemove = (uri) =>
-		imageUrisValue(
+		setFieldValue(
 			name,
 			imageUris.filter((imageUri) => imageUri !== uri)
 		)

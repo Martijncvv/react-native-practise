@@ -8,8 +8,8 @@
 		"userInterfaceStyle": "light",
 		"splash": {
 			"image": "./app/assets/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
+			"resizeMode": "cover",
+			"backgroundColor": "#e63c4b"
 		},
 		"updates": {
 			"fallbackToCacheTimeout": 0
@@ -29,11 +29,9 @@
 		},
 		"plugins": [
 			[
-				"expo-media-library",
+				"expo-image-picker",
 				{
-					"photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-					"savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-					"isAccessMediaLocationEnabled": true
+					"photosPermission": "The app accesses your photos to let you share them with your friends."
 				}
 			]
 		]

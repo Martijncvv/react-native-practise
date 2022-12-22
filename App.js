@@ -1,92 +1,50 @@
-import { StatusBar } from 'expo-status-bar'
-import {
-	useDimensions,
-	useDeviceOrientation,
-} from '@react-native-community/hooks'
 import { NavigationContainer } from '@react-navigation/native'
 
-// import { AsyncStorage } from '@react-navigation/async-storage'
-import NetInfo, { useNetInfo } from '@react-native-community/netinfo'
+import React, { useCallback, useState, useEffect } from 'react'
 
-import { StyleSheet } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import * as ImagePicker from 'expo-image-picker'
-import * as Permissions from 'expo-permissions'
-import * as MediaLibrary from 'expo-media-library'
+import * as SplashScreen from 'expo-splash-screen'
 
 import AppNavigator from './app/navigation/AppNavigator'
 import AuthNavigator from './app/navigation/AuthNavigator'
-import FeedNavigator from './app/navigation/FeedNavigator'
-import AccountNavigator from './app/navigation/AccountNavigator'
 
 import navigationTheme from './app/navigation/navigationTheme'
-// import ListItem from './app/components/ListItem'
+import AuthContext from './app/auth/context'
+import authStorage from './app/auth/storage'
+import { View } from 'react-native'
 
-const categories = [
-	{ label: 'Furniture', value: 1 },
-	{ label: 'Clothing', value: 2 },
-	{ label: 'Cameras', value: 3 },
-]
+SplashScreen.preventAutoHideAsync()
 
 export default function App() {
-	const netInfo = useNetInfo()
+	const [user, setUser] = useState()
+	const [isReady, setIsReady] = useState(false)
 
-	const demo = async () => {
-		try {
-			await AsyncStorage.setIem('person', JSON.stringify({ id: 1 }))
-			const value = await AsyncStorage.getItem('person')
-			const person = JSON.parse(value)
-			console.log(person)
-		} catch (error) {
-			console.log(error)
-		}
+	useEffect(() => {
+		restoreUser()
+	}, [])
+
+	const restoreUser = async () => {
+		const user = await authStorage.getUser()
+		if (user) setUser(user)
+		setIsReady(true)
 	}
-	// console.log('netInfo: ', netInfo)
-	// useEffect(() => {
-	// 	requestPermission()
-	// }, [])
+
+	const onLayoutRootView = useCallback(async () => {
+		if (isReady) {
+			await SplashScreen.hideAsync()
+		}
+	}, [isReady])
+
+	if (!isReady) {
+		return null
+	}
 
 	return (
-		<NavigationContainer theme={navigationTheme}>
-			{/* <StackNavigator /> */}
-
-			{/* <AuthNavigator /> */}
-			{/* <AppNavigator /> */}
-			{/* <AccountNavigator /> */}
-
-			<AppNavigator />
-		</NavigationContainer>
-		/* <Button title="Select Image" onPress={selectImage} /> */
-		// <LoginScreen />
-		// <ListingEditScreen />
-		// <MessagesScreen />
-		// <ListItem />
-		// <Screen>
-		// 	{/* <Switch value={isNew} onValueChange={(newValue) => setIsNew(newValue)} /> */}
-		// 	{/* <AppTextInput placeholder="testest" icon="email" /> */}
-		// 	{/* <Text>{firstName}</Text> */}
-		// 	<AppPicker
-		// 		icon="apps"
-		// 		items={categories}
-		// 		placeholder="Category"
-		// 		selectedItem={category}
-		// 		onSelectItem={(item) => setCategory(item)}
-		// 	/>
-		// 	<AppTextInput icon="email" placeholder="Email" />
-		// </Screen>
+		<View onLayout={onLayoutRootView}>
+			<AuthContext.Provider value={{ user, setUser }}>
+				<NavigationContainer theme={navigationTheme}>
+					{user ? <AppNavigator /> : <AuthNavigator />}
+				</NavigationContainer>
+			</AuthContext.Provider>
+		</View>
 	)
-	//  <ListingsScreen />
 }
-
-const styles = StyleSheet.create({
-	midButton: {
-		width: 50,
-		height: 50,
-		marginBottom: 20,
-		justifyContent: 'center',
-		alignItems: 'center',
-
-		backgroundColor: 'tomato',
-		borderRadius: 25,
-	},
-})
